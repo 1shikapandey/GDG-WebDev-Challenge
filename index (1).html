@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GDG VIT Pune | Web Dev Challenge</title>
+<style>
+  :root { --bg:#f8f9fa; --fg:#202124; --card:#fff; --accent:#1a73e8; --line:#dadce0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#202124; --fg:#e8eaed; --card:#2d2e31; --accent:#8ab4f8; --line:#5f6368; }
+  }
+  body { margin:0; font-family: system-ui, sans-serif; background:var(--bg); color:var(--fg);
+         display:flex; justify-content:center; padding:24px; }
+  main { max-width:520px; width:100%; background:var(--card); border:1px solid var(--line);
+         border-radius:12px; padding:24px; }
+  h1 { font-size:1.3rem; margin-top:0; }
+  label { display:block; margin:16px 0 6px; font-weight:600; }
+  input { width:100%; box-sizing:border-box; padding:10px; border:1px solid var(--line);
+          border-radius:8px; background:transparent; color:inherit; font-size:1rem; }
+  button { margin-top:12px; padding:10px 16px; border:0; border-radius:8px; background:var(--accent);
+           color:#fff; font-size:1rem; cursor:pointer; }
+  .hint { font-size:.9rem; opacity:.75; }
+  #status { margin-top:12px; min-height:1.2em; }
+  hr { border:0; border-top:1px solid var(--line); margin:24px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Web Dev Challenge</h1>
+  <p class="hint">Open your browser DevTools (F12) and keep the Console tab visible. Everything you need to answer appears there.</p>
+
+  <label for="email">Step 1: Enter the same college email you used in the form</label>
+  <input id="email" type="email" placeholder="name@vit.edu">
+  <button id="start">Start</button>
+  <div id="status" class="hint"></div>
+
+  <hr>
+
+  <label>Step 2: Click the button below once your token has appeared</label>
+  <button id="report">Submit Report</button>
+  <p class="hint">Then note down the exact error text shown in the console.</p>
+</main>
+
+<script>
+  function makeToken(email) {
+    var s = email.trim().toLowerCase() + "gdgvit-r7x-oct26";
+    var h = 5381;
+    for (var i = 0; i < s.length; i++) {
+      h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+    }
+    return h.toString(36).toUpperCase().padStart(7, "0").slice(-6);
+  }
+
+  document.getElementById("start").addEventListener("click", function () {
+    var email = document.getElementById("email").value;
+    var status = document.getElementById("status");
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      status.textContent = "Please enter a valid email.";
+      return;
+    }
+    status.textContent = "Done. Check the console.";
+    console.log("%cGDG Challenge", "font-size:16px;font-weight:bold;color:#1a73e8");
+    console.log("Your token is: " + makeToken(email));
+  });
+
+  document.getElementById("report").addEventListener("click", function () {
+    // Intentional bug for the test: appConfig is never defined.
+    var endpoint = window.appConfig.endpoint.url;
+    console.log("Sending report to " + endpoint);
+  });
+</script>
+</body>
+</html>
